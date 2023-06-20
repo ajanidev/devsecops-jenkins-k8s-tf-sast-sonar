@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ajanibuggy-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ajanibuggy
+  template:
+    metadata:
+      labels:
+        app: ajanibuggy
+    spec:
+      containers:
+      - name: ajanigbuggy
+        image: 145988340565.dkr.ecr.us-west-2.amazonaws.com/asg
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+# service type loadbalancer       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ajanibuggy
+    k8s-app: ajanibuggy
+  name: ajanibuggy
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  type: LoadBalancer
+  selector:
+    app: ajanibuggy
