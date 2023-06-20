@@ -18,11 +18,13 @@ pipeline {
       }
     }
 
+    def app // Declare the 'app' variable at the top level
+
     stage('Build') {
       steps {
         script {
           docker.withRegistry('https://899841823945.dkr.ecr.us-west-2.amazonaws.com', 'ecr:us-west-2:aws-credentials') {
-            def app = docker.build('ajani')
+            app = docker.build('ajani') // Assign a value to the 'app' variable
           }
         }
       }
@@ -32,7 +34,7 @@ pipeline {
       steps {
         script {
           docker.withRegistry('https://899841823945.dkr.ecr.us-west-2.amazonaws.com', 'ecr:us-west-2:aws-credentials') {
-            app.push('latest')
+            app.push('latest') // Access the 'app' variable and perform the push
           }
         }
       }
