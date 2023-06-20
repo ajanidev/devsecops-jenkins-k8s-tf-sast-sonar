@@ -3,10 +3,6 @@ pipeline {
   tools {
     maven 'Maven_3_5_2'
   }
-
-  // Declare the 'app' variable at the top level
-  def app
-
   stages {
     stage('Compile and Run Sonar Analysis') {
       steps {
@@ -24,10 +20,9 @@ pipeline {
 
     stage('Build') {
       steps {
-        script {
-          docker.withRegistry('https://899841823945.dkr.ecr.us-west-2.amazonaws.com', 'ecr:us-west-2:aws-credentials') {
-            // Assign the 'app' variable within the 'Build' stage
-            app = docker.build('ajani')
+        withDockerRegistry([credentialsId: "dockerlogin", url: ""]) {
+          script {
+            app = docker.build("ajani")
           }
         }
       }
@@ -37,8 +32,7 @@ pipeline {
       steps {
         script {
           docker.withRegistry('https://899841823945.dkr.ecr.us-west-2.amazonaws.com', 'ecr:us-west-2:aws-credentials') {
-            // Access the 'app' variable defined at the top level and use it in the 'Push' stage
-            app.push('latest')
+            app.push("latest")
           }
         }
       }
